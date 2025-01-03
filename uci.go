@@ -16,6 +16,7 @@ type UbusUciRequestGeneric struct {
 	Option  string `json:"option,omitempty"`
 	Type    string `json:"type,omitempty"`
 	Match   string `json:"match,omitempty"`
+	Name    string `json:"name,omitempty"`
 }
 
 type UbusUciRequest struct {
@@ -153,7 +154,7 @@ func (u *Ubus) UciChanges(id int) (map[string]map[string][][]string, error) {
 	var ubusData map[string]map[string][][]string
 	ubusDataByte, err := json.Marshal(call.Result.([]interface{})[1])
 	if err != nil {
-		return nil, errors.New("Data error")
+		return nil, errors.New("data error")
 	}
 	json.Unmarshal(ubusDataByte, &ubusData)
 	return ubusData, nil
@@ -207,6 +208,34 @@ func (u *Ubus) UciReloadConfig(id int) error {
 			] 
 		}`)
 	_, err := u.Call(jsonStr)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *Ubus) UciAddConfig(id int, request interface{}) error {
+	errLogin := u.LoginCheck()
+	if errLogin != nil {
+		return errLogin
+	}
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return errors.New("Error Parsing UCI Request Data")
+	}
+	var jsonStr = []byte(`
+		{ 
+			"jsonrpc": "2.0", 
+			"id": ` + strconv.Itoa(id) + `, 
+			"method": "call", 
+			"params": [ 
+				"` + u.AuthData.UbusRPCSession + `", 
+				"uci", 
+				"add", 
+				` + string(jsonData) + ` 
+			] 
+		}`)
+	_, err = u.Call(jsonStr)
 	if err != nil {
 		return err
 	}
