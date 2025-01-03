@@ -1,19 +1,56 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/ploynomail/goubus"
 )
 
+// This is an example acl of how to use the goubus package,
+// you can use the root user to access all the ubus functions,
+// and you can increase the access control list to allow other users to access the ubus functions.
+// /usr/share/rpcd/acl.d/root.json
+// {
+//         "root": {
+//                 "description": "Super user access role",
+//                 "read": {
+//                         "ubus": {
+//                                 "*": [ "*" ]
+//                         },
+//                         "uci": [ "*" ],
+//                         "file": {
+//                                 "*": ["*"]
+//                         }
+//                 },
+//                 "write": {
+//                         "ubus": {
+//                                 "*": [ "*" ]
+//                         },
+//                         "uci": [ "*" ],
+//                         "file": {
+//                                 "*": ["*"]
+//                         },
+//                         "cgi-io": ["*"]
+//                 }
+//         }
+// }
+
 func main() {
 	ubus := goubus.Ubus{
-		Username: "turingroot",
-		Password: "123456",
-		URL:      "http://192.168.23.197/ubus",
+		Username: "root",
+		Password: "",
+		URL:      "http://127.0.0.1/ubus",
 	}
+	fmt.Printf("%+v\n", ubus)
 	_, err := ubus.AuthLogin()
 	if err != nil {
+		log.Fatal(err)
+	}
+	time.Sleep(1 * time.Minute)
+
+	if err := ubus.LoginCheck(); err != nil {
 		log.Fatal(err)
 	}
 	// request := goubus.UbusUciRequest{
