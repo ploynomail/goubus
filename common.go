@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/digineo/go-uci/v2"
 )
 
 // UbusResponseCode represent the status code from JSON-RPC Call
@@ -38,6 +40,7 @@ type Ubus struct {
 	Password string
 	URL      string
 	AuthData *UbusAuthData
+	UciTree  uci.Tree
 }
 
 // UbusResponse represents a response from JSON-RPC

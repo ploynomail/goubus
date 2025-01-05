@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"time"
 
 	"github.com/ploynomail/goubus"
 )
@@ -39,65 +37,18 @@ import (
 
 func main() {
 	ubus := goubus.Ubus{
-		Username: "root",
-		Password: "",
-		URL:      "http://127.0.0.1/ubus",
+		Username: "turingroot",
+		Password: "123456",
+		URL:      "http://192.168.23.197/ubus",
+		UciTree:  goubus.NewUciTree(),
 	}
-	fmt.Printf("%+v\n", ubus)
 	_, err := ubus.AuthLogin()
 	if err != nil {
 		log.Fatal(err)
 	}
-	time.Sleep(1 * time.Minute)
-
 	if err := ubus.LoginCheck(); err != nil {
 		log.Fatal(err)
 	}
-	// request := goubus.UbusUciRequest{
-	// 	UbusUciRequestGeneric: goubus.UbusUciRequestGeneric{
-	// 		Config:  "network",
-	// 		Section: "lan",
-	// 	},
-	// }
-	// resp, err := ubus.UciGetConfig(2, request)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Printf("%+v\n", resp)
-
-	// err = ubus.UciSetConfig(3, goubus.UbusUciRequest{
-	// 	UbusUciRequestGeneric: goubus.UbusUciRequestGeneric{
-	// 		Config: "testconfig",
-	// 		Type:   "interface",
-	// 		Name:   "lan",
-	// 	},
-	// 	Values: map[string]string{
-	// 		"type":   "bridge",
-	// 		"proto":  "dhcp",
-	// 		"ifname": "eth0",
-	// 	},
-	// })
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// err = ubus.UciSetConfig(3, goubus.UbusUciRequest{
-	// 	UbusUciRequestGeneric: goubus.UbusUciRequestGeneric{
-	// 		Config:  "network",
-	// 		Type:    "interface",
-	// 		Section: "wan",
-	// 	},
-	// 	Values: map[string]string{
-	// 		"ifname": "eth0",
-	// 	},
-	// })
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// err = ubus.UciCommit(4, "testconfig")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 
 	// l, err := ubus.LogRead(5, 10, false, false)
 	// if err != nil {
@@ -125,5 +76,27 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 	// log.Printf("%+v\n", rclist)
-
+	// network := uci.Network{
+	// 	Network: map[string]uci.NetworkInterface{
+	// 		"lan": {
+	// 			Name:    "lan",
+	// 			Proto:   "static",
+	// 			Ipaddr:  "192.168.22.1",
+	// 			Netmask: "255.255.25.0",
+	// 			Dns:     "192.168.22.1",
+	// 		},
+	// 		"wan": {
+	// 			Name:   "wan",
+	// 			Proto:  "dhcp",
+	// 			Dns:    "",
+	// 			Device: "eth0",
+	// 		},
+	// 	},
+	// }
+	// n := uci.NewNetwork(ubus.UciTree)
+	// n.SetInterfaces(network.Network)
+	// err = n.SaveConfig()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 }
