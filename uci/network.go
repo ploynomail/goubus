@@ -6,14 +6,14 @@ import (
 
 type NetworkInterface struct {
 	Name    string `json:"name"`
-	Type    string `json:"type"`  // "bridge" or "ethernet" or "wireless"
+	Type    string `json:"type"`  // "bridge" or "interface"
 	Proto   string `json:"proto"` // "static" or "dhcp"
 	Ipaddr  string `json:"ipaddr"`
 	Netmask string `json:"netmask"`
 	Gateway string `json:"gateway"`
 	Dns     string `json:"dns"`
 	Macaddr string
-	Device  string `json:"ifname"`
+	Device  []string `json:"ifname"`
 }
 
 type Network struct {
@@ -21,7 +21,7 @@ type Network struct {
 	UciTree uci.Tree
 }
 
-func NewNetwork(ut uci.Tree) *Network {
+func NewNetworkConfig(ut uci.Tree) *Network {
 	if ut == nil {
 		ut = uci.NewTree("/etc/config")
 	}
@@ -71,8 +71,8 @@ func (n *Network) SaveConfig() error {
 }
 
 func (n *Network) ReplayInterface(inf NetworkInterface) error {
-	if inf.Type != "bridge" && inf.Device == "" {
-		inf.Device = inf.Name
+	if inf.Type != "bridge" && len(inf.Device) == 0 {
+		inf.Device = []string{inf.Name}
 	}
 	infMap, err := StructToMap(inf)
 	if err != nil {
@@ -88,7 +88,25 @@ func (n *Network) ReplayInterface(inf NetworkInterface) error {
 		return err
 	}
 	for k, v := range infMap {
+		if k == "ifname" {
+			if len(inf.Device) > 1 {
+				n.UciTree.SetType("network", inf.Name, "ifname", uci.TypeList, inf.Device...)
+			} else if len(inf.Device) == 1 {
+				n.UciTree.SetType("network", inf.Name, "ifname", uci.TypeOption, inf.Device[0])
+			}
+			continue
+		}
+
 		n.UciTree.SetType("network", inf.Name, k, uci.TypeOption, v)
 	}
+	n.UciTree.SetType("network", inf.Name, "ipv6", uci.TypeOption, "0")
 	return nil
+}
+
+func (n *Network) GetInterfacesInConfig() ([]string, error) {
+	sections, err := n.UciTree.GetSections("network", "interface")
+	if err != nil {
+		return nil, err
+	}
+	return sections, nil
 }

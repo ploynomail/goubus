@@ -1,11 +1,5 @@
 package main
 
-import (
-	"log"
-
-	"github.com/ploynomail/goubus"
-)
-
 // This is an example acl of how to use the goubus package,
 // you can use the root user to access all the ubus functions,
 // and you can increase the access control list to allow other users to access the ubus functions.
@@ -36,20 +30,28 @@ import (
 // }
 
 func main() {
-	ubus := goubus.Ubus{
-		Username: "turingroot",
-		Password: "123456",
-		URL:      "http://192.168.23.197/ubus",
-		UciTree:  goubus.NewUciTree(),
-	}
-	_, err := ubus.AuthLogin()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if err := ubus.LoginCheck(); err != nil {
-		log.Fatal(err)
-	}
-
+	// ubus := goubus.Ubus{
+	// 	Username: "root",
+	// 	Password: "",
+	// 	URL:      "http://192.168.23.196/ubus",
+	// 	UciTree:  goubus.NewUciTree(),
+	// }
+	// _, err := ubus.AuthLogin()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// if err := ubus.LoginCheck(); err != nil {
+	// 	log.Fatal(err)
+	// }
+	// n := uci.NewNetworkConfig(ubus.UciTree)
+	// c, err := n.GetInterfacesInConfig()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for _, v := range c {
+	// 	networkInfStatus := ubus.NetworkStatus(0, v)
+	// 	log.Printf("%+v\n", networkInfStatus)
+	// }
 	// l, err := ubus.LogRead(5, 10, false, false)
 	// if err != nil {
 	// 	log.Fatal(err)
@@ -81,22 +83,34 @@ func main() {
 	// 		"lan": {
 	// 			Name:    "lan",
 	// 			Proto:   "static",
-	// 			Ipaddr:  "192.168.22.1",
-	// 			Netmask: "255.255.25.0",
-	// 			Dns:     "192.168.22.1",
+	// 			Type:    "bridge",
+	// 			Ipaddr:  "192.168.23.196",
+	// 			Netmask: "255.255.254.0",
+	// 			Dns:     "223.5.5.5",
+	// 			Gateway: "192.168.22.1",
+	// 			Device:  []string{"eth0", "eth1"},
 	// 		},
 	// 		"wan": {
-	// 			Name:   "wan",
-	// 			Proto:  "dhcp",
-	// 			Dns:    "",
-	// 			Device: "eth0",
+	// 			Name:    "wan",
+	// 			Proto:   "static",
+	// 			Ipaddr:  "192.168.57.1",
+	// 			Netmask: "255.255.255.0",
+	// 			Gateway: "192.168.57.254",
+	// 			Dns:     "192.168.57.254",
+	// 			Type:    "ethernet",
+	// 			Device:  []string{"eth2"},
 	// 		},
 	// 	},
 	// }
-	// n := uci.NewNetwork(ubus.UciTree)
+	// n := uci.NewNetworkConfig(ubus.UciTree)
 	// n.SetInterfaces(network.Network)
-	// err = n.SaveConfig()
+	// err := n.SaveConfig()
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
+	// c, err := n.GetInterfacesInConfig()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// log.Printf("%+v\n", c)
 }

@@ -85,7 +85,7 @@ func (u *Ubus) NetworkDeviceStatus(id int, name string) (UbusNetworkDevice, erro
 	ubusData := UbusNetworkDevice{}
 	ubusDataByte, err := json.Marshal(call.Result.([]interface{})[1])
 	if err != nil {
-		return UbusNetworkDevice{}, errors.New("Data error")
+		return UbusNetworkDevice{}, errors.New("data error")
 	}
 	json.Unmarshal(ubusDataByte, &ubusData)
 	return ubusData, nil
