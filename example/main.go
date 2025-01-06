@@ -1,5 +1,12 @@
 package main
 
+import (
+	"log"
+
+	"github.com/ploynomail/goubus"
+	"github.com/ploynomail/goubus/uci"
+)
+
 // This is an example acl of how to use the goubus package,
 // you can use the root user to access all the ubus functions,
 // and you can increase the access control list to allow other users to access the ubus functions.
@@ -30,28 +37,28 @@ package main
 // }
 
 func main() {
-	// ubus := goubus.Ubus{
-	// 	Username: "root",
-	// 	Password: "",
-	// 	URL:      "http://192.168.23.196/ubus",
-	// 	UciTree:  goubus.NewUciTree(),
-	// }
-	// _, err := ubus.AuthLogin()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// if err := ubus.LoginCheck(); err != nil {
-	// 	log.Fatal(err)
-	// }
-	// n := uci.NewNetworkConfig(ubus.UciTree)
-	// c, err := n.GetInterfacesInConfig()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// for _, v := range c {
-	// 	networkInfStatus := ubus.NetworkStatus(0, v)
-	// 	log.Printf("%+v\n", networkInfStatus)
-	// }
+	ubus := goubus.Ubus{
+		Username: "root",
+		Password: "",
+		URL:      "http://192.168.23.196/ubus",
+		UciTree:  goubus.NewUciTree("/etc/config"),
+	}
+	_, err := ubus.AuthLogin()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := ubus.LoginCheck(); err != nil {
+		log.Fatal(err)
+	}
+	n := uci.NewNetworkConfig(ubus.UciTree)
+	c, err := n.GetInterfacesInConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, v := range c {
+		networkInfStatus := ubus.NetworkStatus(0, v)
+		log.Printf("%+v\n", networkInfStatus)
+	}
 	// l, err := ubus.LogRead(5, 10, false, false)
 	// if err != nil {
 	// 	log.Fatal(err)

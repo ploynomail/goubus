@@ -18,6 +18,9 @@ type UbusUciRequest struct {
 	Values map[string]string `json:"values,omitempty"`
 }
 
-func NewUciTree() uci.Tree {
+func NewUciTree(defalt string) uci.Tree {
+	if defalt != "" {
+		defaultUciPath = defalt
+	}
 	return uci.NewTree(defaultUciPath)
 }

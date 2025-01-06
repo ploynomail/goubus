@@ -31,6 +31,8 @@ type UbusNetworkDevice struct {
 	Txqueuelen          int                        `json:"txqueuelen"`
 	Type                string                     `json:"type"`
 	Up                  bool                       `json:"up"`
+	Speed               int                        `json:"speed"`
+	BridgeMembers       []string                   `json:"bridge-members"`
 }
 
 type UbusNetworkDeviceStatistic struct {
